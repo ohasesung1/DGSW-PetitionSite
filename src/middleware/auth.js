@@ -1,5 +1,5 @@
-import lib  from '../lib/token';
-import colorConsolg from '../lib/console';
+import * as lib  from '../lib/token';
+import * as colorConsole from '../lib/console';
 
 const authMiddleware = async (req, res, next) => {
   const token = req.headers['x-access-token'];
@@ -12,7 +12,8 @@ const authMiddleware = async (req, res, next) => {
 
     res.status(400).json(result);
 
-    colorConsolg.error('토큰 없음');
+    console.log('토큰 없음');
+    
 
     return;
   }
@@ -32,7 +33,7 @@ const authMiddleware = async (req, res, next) => {
 
     req.decoded = decodeToken;
   } catch (error) {
-    colorConsolg.warn(`[auth] 잘못된 토큰 : ${error}`);
+    console.log(`[auth] 잘못된 토큰 : ${error}`);
 
     let status = null;
     let message = null;
@@ -53,7 +54,7 @@ const authMiddleware = async (req, res, next) => {
         message = '토큰이 만료되었습니다';
         break;
       default:
-        colorConsolg.warn(error.message);
+        console.log(error.message);
         status = 500;
         message = '다시 시도해 주세요';
         break;

@@ -56,5 +56,15 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  Member.grantAuth = (memberId)=> Member.update({
+    accessLevel: 1,
+  }, {
+    where: {
+      id: memberId,
+    },
+
+    raw: true,
+  });
+
   return Member;
 };
