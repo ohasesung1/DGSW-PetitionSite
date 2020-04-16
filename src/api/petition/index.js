@@ -3,9 +3,9 @@ import * as petitionCtrl from './petition.ctrl';
 import authMiddleWare from '../../middleware/auth';
 const petition  = express.Router();
 
-// petition.post('/login', authCtrl.login);
-// petition.post('/register', authCtrl.registerMember);
-// petition.post('/find/id', authCtrl.validateId);
-// petition.post('/grant', authMiddleWare, authCtrl.grantAuth);
+petition.post('/', authMiddleWare, petitionCtrl.writePetition);
+petition.get('/', authMiddleWare, petitionCtrl.readPetitions);
+petition.put('/', authMiddleWare, petitionCtrl.updatePetition);
+petition.delete('/', authMiddleWare, petitionCtrl.deletePetition);
 
-export default auth;
+export default petition;

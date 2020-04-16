@@ -155,7 +155,7 @@ export const validateId = async (req, res) => {
 
 export const grantAuth = async (req ,res) => {
   const { accessLevel } = req.decoded;
-  const { memberId } = req.body;
+  const { id } = req.body;
 
     if (accessLevel !== 0) {
       const result = {
@@ -179,7 +179,7 @@ export const grantAuth = async (req ,res) => {
       return;
     }
   try {
-    await models.Member.grantAuth(memberId);
+    await models.Member.grantAuth(id);
     const result = {
       status: 200,
       message: '학생회 권한 주기 성공!',

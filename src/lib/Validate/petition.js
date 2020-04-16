@@ -7,6 +7,7 @@ export const validateWritePetition = async (body) => {
   const schema = Joi.object().keys({
     title: Joi.string().required(),
     contents: Joi.string().required(),
+    category: Joi.string().required(),
   });
 
   try {
@@ -18,9 +19,8 @@ export const validateWritePetition = async (body) => {
 
 export const vaildateUpdatePetition = async (body) => {
   const schema = Joi.object().keys({
-    id: Joi.string().required(),
-    pw: Joi.string().required(),
-    name: Joi.string().required(),
+    title: Joi.string().required(),
+    contents: Joi.string().required(),
   });
 
   try {
