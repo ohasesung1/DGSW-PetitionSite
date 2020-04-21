@@ -20,6 +20,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    /** 블라인드 여부 */
+    blind: {
+      field: 'blind',
+      type: DataTypes.INTEGER(50),
+      allowNull: false,
+      defaultValue: 0,
+    },
     /** 내용 */
     contents: {
       field: 'contents',
@@ -74,6 +81,33 @@ export default (sequelize, DataTypes) => {
     where: {
       idx,
     },
+
+    raw: true,
+  });
+
+  Petition.getAllPetitionsByCategory = (category) => Petition.findAll({
+    where: {
+      category,
+    },
+
+    order: [
+      ['joinDate', 'DESC'],
+    ],
+
+    raw: true,
+  });
+
+  Petition.getPetitionsByCategory = (category, requestPage, limit) => Petition.findAll({
+    offset: requestPage,
+    limit,
+    
+    where: {
+      category,
+    },
+
+    order: [
+      ['joinDate', 'DESC'],
+    ],
 
     raw: true,
   });

@@ -50,5 +50,22 @@ export default (sequelize, DataTypes) => {
     });
   };
 
+  Comment.findComment = (petitionIdx, id) => Comment.findOne({
+    where: {
+      id,
+      petitionIdx,
+    },
+
+    raw: true,
+  });
+
+  Comment.getCommentsByPetitionIdx = (idx) => Comment.findAll({
+    where: {
+      petitionIdx: idx,
+    },
+
+    raw: true,
+  });
+
   return Comment;
 };
