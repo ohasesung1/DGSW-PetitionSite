@@ -27,11 +27,92 @@ export const writePetition = async (req, res) => {
     await models.Petition.create({
       ...body,
       id: memberId,
+      isAllowed: 0,
     });
 
     const result = {
       status: 200,
       messaga: '청원 작성 완료!',
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    colorConsole.red(error);
+
+    const result = {
+      status: 500,
+      messaga: '서버 에러!',
+    };
+
+    res.status(500).json(result);
+  }
+};
+
+export const isAllowedPetition = async (req, res) => {
+  const { body } = req;
+
+  try {
+    const { idx, isAllowed } = body;
+
+    const result = {
+      status: 200,
+      messaga: '청원 게시글 승인 성공!',
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    colorConsole.red(error);
+
+    const result = {
+      status: 500,
+      messaga: '서버 에러!',
+    };
+
+    res.status(500).json(result);
+  }
+};
+
+export const readNotAllowedPetition = async (req ,res) => {
+  const { accessLevel } = req.decoded;
+  const { page } = req.query;
+  let { limit } = req.query;
+
+  if (accessLevel != 0 && accessLevel != 1) {
+    const result = {
+      status: 403,
+      messaga: '권한 없음',
+    };
+
+    res.status(403).json(result);
+    return;
+  }
+
+  if (!page || !limit) {
+    const result = {
+      status: 400,
+      messaga: '요청 검증 오류',
+    };
+
+    res.status(400).json(result);
+    return;
+  }
+
+  try {
+    const requestPage = (page - 1) * limit;
+    limit = Number(limit);
+
+    const petition = await models.Petition.getNotAllowedPetitions(requestPage, limit);
+    const petitionAll = await models.Petition.getNotAllowedAllPetitions();
+
+    const totalPage = Math.ceil(petitionAll.length / limit);
+
+    const result = {
+      status: 200,
+      messaga: '청원 게시글 목록 조회 성공!',
+      data: {
+        petition,
+        totalPage,
+      },
     };
 
     res.status(200).json(result);

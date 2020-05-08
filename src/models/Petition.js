@@ -27,6 +27,13 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
+    /** 승인 여부 */
+    isAllowed: {
+      field: 'is_allowed',
+      type: DataTypes.INTEGER(50),
+      allowNull: false,
+      defaultValue: 0,
+    },
     /** 내용 */
     contents: {
       field: 'contents',
@@ -57,6 +64,33 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
   };
+
+  Petition.getNotAllowedAllPetitions = () => Petition.findAll({
+    where: {
+      isAllowed: 0,
+    },
+
+    order: [
+      ['joinDate', 'DESC'],
+    ],
+
+    raw: true,
+  });
+
+  Petition.getNotAllowedPetitions = (requestPage, limit) => Petition.findAll({
+    offset: requestPage,
+    limit,
+
+    where: {
+      isAllowed: 0,
+    },
+
+    order: [
+      ['joinDate', 'DESC'],
+    ],
+
+    raw: true,
+  });
 
   Petition.getPetitions = (requestPage, limit) => Petition.findAll({
     offset: requestPage,
