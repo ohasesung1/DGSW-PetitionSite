@@ -128,7 +128,51 @@ export const readNotAllowedPetition = async (req ,res) => {
   }
 };
 
+// 승인된 청원 목록 조회
 export const readPetitions = async (req, res) => {
+  const { page } = req.query;
+  let { limit } = req.query;
+  
+  try {
+    const requestPage = (page - 1) * limit;
+    limit = Number(limit);
+
+    const petition = await models.Petition.getPetitions(requestPage, limit);
+    const petitionAll = await models.Petition.getAllPetitions();
+
+    await asyncForeach(petition, async (item) => {
+      const { idx } = item;
+
+      const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+
+      item.commentCount = comment.length;
+    });
+
+    const totalPage = Math.ceil(petitionAll.length / limit);
+
+    const result = {
+      status: 200,
+      messaga: '청원 게시글 목록 조회 성공!',
+      data: {
+        petition,
+        totalPage,
+      },
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    colorConsole.red(error);
+
+    const result = {
+      status: 500,
+      messaga: '서버 에러!',
+    };
+
+    res.status(500).json(result);
+  }
+};
+
+export const readAllPetitions = async (req, res) => {
   const { page } = req.query;
   let { limit } = req.query;
 
@@ -136,8 +180,16 @@ export const readPetitions = async (req, res) => {
     const requestPage = (page - 1) * limit;
     limit = Number(limit);
 
-    const petition = await models.Petition.getPetitions(requestPage, limit);
-    const petitionAll = await models.Petition.getAllPetitions();
+    const petition = await models.Petition.getAllIsAllowPetitions(requestPage, limit);
+    const petitionAll = await models.Petition.getAllIsAllowPetitionsForCount();
+
+    await asyncForeach(petition, async (item) => {
+      const { idx } = item;
+
+      const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+
+      item.commentCount = comment.length;
+    });
 
     const totalPage = Math.ceil(petitionAll.length / limit);
 

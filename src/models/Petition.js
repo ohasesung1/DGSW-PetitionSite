@@ -65,6 +65,7 @@ export default (sequelize, DataTypes) => {
     });
   };
 
+  // 승인 되지 않은 청원 전체 조회
   Petition.getNotAllowedAllPetitions = () => Petition.findAll({
     where: {
       isAllowed: 0,
@@ -77,6 +78,7 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 승인 되지 않은 청원 조회
   Petition.getNotAllowedPetitions = (requestPage, limit) => Petition.findAll({
     offset: requestPage,
     limit,
@@ -92,7 +94,24 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 승인된 청원 페이지 별 조회 
   Petition.getPetitions = (requestPage, limit) => Petition.findAll({
+    offset: requestPage,
+    limit,
+
+    order: [
+      ['joinDate', 'DESC'],
+    ],
+
+    where: {
+      isAllowed: 1,
+    },
+
+    raw: true,
+  });
+
+  // 전체 청원 목록 조회
+  Petition.getAllIsAllowPetitions = (requestPage, limit) => Petition.findAll({
     offset: requestPage,
     limit,
 
@@ -103,7 +122,8 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
-  Petition.getAllPetitions = () => Petition.findAll({
+  // 전체 청원 목록 페이지 카운트 조회
+  Petition.getAllIsAllowPetitionsForCount = () => Petition.findAll({
     order: [
       ['joinDate', 'DESC'],
     ],
@@ -111,6 +131,20 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 승인된 모든 목록 조회
+  Petition.getAllPetitions = () => Petition.findAll({
+    order: [
+      ['joinDate', 'DESC'],
+    ],
+
+    where: {
+      isAllowed: 1,
+    },
+
+    raw: true,
+  });
+
+  // 청원 검색
   Petition.findPetition = (idx) => Petition.findOne({
     where: {
       idx,
@@ -119,6 +153,7 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 카테고리별 청원 전체 조회
   Petition.getAllPetitionsByCategory = (category) => Petition.findAll({
     where: {
       category,
@@ -131,6 +166,7 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 카테고리별 청원 조회
   Petition.getPetitionsByCategory = (category, requestPage, limit) => Petition.findAll({
     offset: requestPage,
     limit,
