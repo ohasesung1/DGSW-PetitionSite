@@ -7,7 +7,7 @@ const petition  = express.Router();
 petition.post('/', authMiddleWare, petitionCtrl.writePetition);
 petition.get('/', petitionCtrl.readPetitions);
 petition.get('/all', petitionCtrl.readAllPetitions);
-petition.get('/detail', authMiddleWare, petitionCtrl.readPetitionDtail);
+petition.get('/detail', petitionCtrl.readPetitionDtail);
 petition.get('/admin', authMiddleWare, petitionCtrl.readNotAllowedPetition);
 petition.get('/is_allowed', authMiddleWare, petitionCtrl.isAllowedPetition);
 petition.post('/blind', authMiddleWare, petitionCtrl.blindPetition);
