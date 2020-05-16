@@ -132,23 +132,58 @@ export const readNotAllowedPetition = async (req ,res) => {
 export const readPetitions = async (req, res) => {
   const { page } = req.query;
   let { limit } = req.query;
+
+  const { type } = req.query;
   
   try {
     const requestPage = (page - 1) * limit;
     limit = Number(limit);
 
-    const petition = await models.Petition.getPetitions(requestPage, limit);
-    const petitionAll = await models.Petition.getAllPetitions();
+    let petition;
+    let petitionAll;
+    let totalPage;
 
-    await asyncForeach(petition, async (item) => {
-      const { idx } = item;
-
-      const comment = await models.Comment.getCommentsByPetitionIdx(idx);
-
-      item.commentCount = comment.length;
-    });
-
-    const totalPage = Math.ceil(petitionAll.length / limit);
+    if (type === 'allowed') {
+      petition = await models.Petition.getPetitions(requestPage, limit);
+      petitionAll = await models.Petition.getAllPetitions();
+  
+      await asyncForeach(petition, async (item) => {
+        const { idx } = item;
+  
+        const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+  
+        item.commentCount = comment.length;
+      });
+  
+      totalPage = Math.ceil(petitionAll.length / limit);
+    } else if (type === 'not_allowed') {
+      petition = await models.Petition.getNotAllowedPetitions(requestPage, limit);
+      petitionAll = await models.Petition.getNotAllowedAllPetitions();
+  
+      await asyncForeach(petition, async (item) => {
+        const { idx } = item;
+  
+        const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+  
+        item.commentCount = comment.length;
+      });
+  
+      totalPage = Math.ceil(petitionAll.length / limit);
+    } else if (type === 'order') {
+      petition = await models.Petition.getAllIsAllowPetitions(requestPage, limit);
+      petitionAll = await models.Petition.getAllIsAllowPetitionsForCount();
+  
+      await asyncForeach(petition, async (item) => {
+        const { idx } = item;
+  
+        const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+  
+        item.commentCount = comment.length;
+      });
+  
+      totalPage = Math.ceil(petitionAll.length / limit);
+    }
+    
 
     const result = {
       status: 200,
@@ -260,8 +295,7 @@ export const readPetitionDtail = async (req, res) => {
 export const readPetitionCategory = async (req, res) => {
   const { category, page } = req.query;
   let { limit } = req.query;
-
-  if (!category || !page || !limit) {
+  if (!page || !limit) {
     const result = {
       status: 400,
       messaga: '요청 방식이 잘못됌!',
@@ -276,11 +310,37 @@ export const readPetitionCategory = async (req, res) => {
     const requestPage = (page - 1) * limit;
     limit = Number(limit);
 
-    const petitionAll = await models.Petition.getAllPetitionsByCategory(category);
-    const petition = await models.Petition.getPetitionsByCategory(category, requestPage, limit);
+    let petition;
+    let petitionAll;
+    let totalPage;
 
-    const totalPage = Math.ceil(petitionAll.length / limit);
+    if (!category) {
+        petition = await models.Petition.getAllIsAllowPetitions(requestPage, limit);
+        petitionAll = await models.Petition.getAllIsAllowPetitionsForCount();
+    
+        await asyncForeach(petition, async (item) => {
+          const { idx } = item;
+    
+          const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+    
+          item.commentCount = comment.length;
+        });
+    
+        totalPage = Math.ceil(petitionAll.length / limit);
+    } else {
+        petitionAll = await models.Petition.getAllPetitionsByCategory(category);
+        petition = await models.Petition.getPetitionsByCategory(category, requestPage, limit);
+    
+        await asyncForeach(petition, async (item) => {
+          const { idx } = item;
+    
+          const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+    
+          item.commentCount = comment.length;
+        });
 
+        totalPage = Math.ceil(petitionAll.length / limit);
+    }
     const result = {
       status: 200,
       messaga: '청원 게시글 조회 성공!(카테고리)',
