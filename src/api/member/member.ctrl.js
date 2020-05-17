@@ -48,8 +48,8 @@ export const findMemberBySearch = async (req, res) => {
   const { query } = req;
 
   try {
-    const { memberId } = query;
-    const member = await models.Member.searchMember(memberId);
+    const { searchWord } = query;
+    const member = await models.Member.searchMember(searchWord);
 
     const result = {
       status: 200,

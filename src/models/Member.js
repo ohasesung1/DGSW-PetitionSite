@@ -84,10 +84,22 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
-  Member.searchMember = (id) => Member.findAll({
+  Member.searchMember = (searchWord) => Member.findAll({
     where: {
-      id: {
-        [Op.like]: "%" + id + "%",
+      [Op.or]: [
+        {
+          id: {
+             [Op.like]: "%" + searchWord + "%" 
+          }
+        },{
+          name: {
+            [Op.like]: "%" + searchWord + "%" 
+          }
+        }
+      ],
+
+      accessLevel: {
+        [Op.ne]: 0, 
       },
     },
 
