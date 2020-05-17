@@ -1,3 +1,6 @@
+import sequelize from 'sequelize';
+const Op = sequelize.Op;
+
 export default (sequelize, DataTypes) => {
   const Petition = sequelize.define('petition', {
     /** idx */
@@ -118,6 +121,16 @@ export default (sequelize, DataTypes) => {
     order: [
       ['joinDate', 'DESC'],
     ],
+
+    raw: true,
+  });
+
+  Petition.searchPetition = (title) => Petition.findAll({
+    where: {
+      title: {
+        [Op.like]: "%" + title + "%",
+      },
+    },
 
     raw: true,
   });

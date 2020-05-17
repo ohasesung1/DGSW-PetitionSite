@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import * as colorConsole from './lib/console';
 import dotenv from 'dotenv';
+import cacheController from 'express-cache-controller';
 import api from './api';
 
 dotenv.config();
@@ -12,7 +13,10 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(cors())
-   .use(express.json());
+   .use(express.json())
+   .use(cacheController({
+     maxAge: 0
+   }));
 
 app.use('/', api);
 

@@ -1,3 +1,6 @@
+import sequelize from 'sequelize';
+const Op = sequelize.Op;
+
 export default (sequelize, DataTypes) => {
   const Member = sequelize.define('member', {
     /** 회원 id */
@@ -16,6 +19,24 @@ export default (sequelize, DataTypes) => {
     /** 회원 권한 등급 */
     accessLevel: {
       field: 'access_level',
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    /** 회원 권한 등급 */
+    grade: {
+      field: 'grade',
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    /** 회원 권한 등급 */
+    studentClass: {
+      field: 'studentClass',
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    /** 회원 권한 등급 */
+    number: {
+      field: 'number',
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -38,6 +59,40 @@ export default (sequelize, DataTypes) => {
   // Member.associate = (models) => {
   //   Member.hasMany
   // }
+
+  Member.getOrderMember = () => Member.findAll({
+    order: [
+      ['grade', 'ASC'],
+      ['studentClass', 'ASC'],
+      ['number', 'ASC'],
+    ],
+
+    where: {
+      [Op.or]: [{accessLevel: 1}, {accessLevel: 2}],
+    },
+
+    raw: true,
+  });
+
+  Member.deleteAuth = (memberId) => Member.update({
+    accessLevel: 2,
+  }, {
+    where: {
+      id: memberId,
+    },
+
+    raw: true,
+  });
+
+  Member.searchMember = (id) => Member.findAll({
+    where: {
+      id: {
+        [Op.like]: "%" + id + "%",
+      },
+    },
+
+    raw: true,
+  });
 
   Member.findMemberForLogin = (id, pw) => Member.findOne({
     where: {

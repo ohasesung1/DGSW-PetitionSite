@@ -305,6 +305,7 @@ export const readPetitionCategory = async (req, res) => {
 
     return;
   }
+  
 
   try {
     const requestPage = (page - 1) * limit;
@@ -456,3 +457,32 @@ export const deletePetition = async (req, res) => {
     res.status(500).json(result);
   }
 };
+
+export const searchPetitionByTitle = async (req, res) => {
+  const { query } = req;
+
+  try {
+    const { title } = query;
+
+    const petition = await models.Petition.searchPetition(title);
+
+    const result = {
+      status: 200,
+      messaga: '청원 검색 성공!',
+      data: {
+        petition,
+      },
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    colorConsole.red(error);
+
+    const result = {
+      status: 500,
+      messaga: '서버 에러!',
+    };
+
+    res.status(500).json(result);
+  }
+}
