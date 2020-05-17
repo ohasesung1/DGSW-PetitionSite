@@ -125,7 +125,20 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
-  Petition.searchPetition = (title) => Petition.findAll({
+  Petition.searchPetition = (title, page, limit) => Petition.findAll({
+    offset: page,
+    limit: limit,
+
+    where: {
+      title: {
+        [Op.like]: "%" + title + "%",
+      },
+    },
+
+    raw: true,
+  });
+
+  Petition.searchAllPetition = (title) => Petition.findAll({
     where: {
       title: {
         [Op.like]: "%" + title + "%",

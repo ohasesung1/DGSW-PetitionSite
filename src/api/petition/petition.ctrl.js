@@ -459,18 +459,35 @@ export const deletePetition = async (req, res) => {
 };
 
 export const searchPetitionByTitle = async (req, res) => {
-  const { query } = req;
+  const { title, page } = req.query;
+  let { limit } = req.query;
+
+  if (!page || !limit) {
+    const result = {
+      status: 400,
+      messaga: '요청 양식 에러',
+    };
+
+    res.status(400).json(result);
+
+    return;
+  }
 
   try {
-    const { title } = query;
+    const requestPage = (page - 1) * limit;
+    limit = Number(limit);
 
-    const petition = await models.Petition.searchPetition(title);
+    const petition = await models.Petition.searchPetition(title, requestPage, limit);
+    const petitionAll = await models.Petition.searchAllPetition(title);
+
+    const totalPage = Math.ceil(petitionAll.length / limit);
 
     const result = {
       status: 200,
       messaga: '청원 검색 성공!',
       data: {
         petition,
+        totalPage
       },
     };
 
