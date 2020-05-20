@@ -26,7 +26,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
     "@babel/preset-env": "^7.9.5",
-    "cors": "^2.8.5",
+    "cors": "^2.8.5", 
     "dotenv": "^8.2.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-plugin-import": "^2.20.2"
