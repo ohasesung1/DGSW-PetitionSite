@@ -134,6 +134,17 @@ export const readPetitions = async (req, res) => {
   let { limit } = req.query;
 
   const { type } = req.query;
+
+  if (!page || !limit || !page) {
+    const result = {
+      status: 400,
+      messaga: '요청 방식 검증 오류',
+    };
+
+    res.status(400).json(result);
+
+    return;
+  }
   
   try {
     const requestPage = (page - 1) * limit;
@@ -425,11 +436,11 @@ export const deletePetition = async (req, res) => {
 
     if (!petition) {
       const result = {
-        status: 400,
+        status: 404,
         messaga: '청원이 없어요!',
       };
   
-      res.status(400).json(result);
+      res.status(404).json(result);
   
       return;
     }
