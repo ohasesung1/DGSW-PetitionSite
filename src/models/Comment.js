@@ -59,6 +59,14 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  Comment.deleteByPetitionIdx = (petitionIdx) => Comment.destroy({
+    where: {
+      petitionIdx,
+    },
+
+    raw: true,
+  });
+
   Comment.getCommentsByPetitionIdx = (idx) => Comment.findAll({
     where: {
       petitionIdx: idx,

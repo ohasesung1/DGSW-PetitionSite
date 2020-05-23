@@ -445,6 +445,8 @@ export const deletePetition = async (req, res) => {
       return;
     }
 
+    await models.Comment.deleteByPetitionIdx(idx);
+
     await models.Petition.destroy({
       where: {
         idx,
