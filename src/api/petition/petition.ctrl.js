@@ -191,8 +191,25 @@ export const readPetitions = async (req, res) => {
   
         item.commentCount = comment.length;
       });
+
+      console.log(petition);
   
       totalPage = Math.ceil(petitionAll.length / limit);
+    } else if (type === 'vote_order') {
+      petition = await models.Petition.getAllIsAllowPetitions(requestPage, limit);
+      petitionAll = await models.Petition.getAllIsAllowPetitionsForCount();
+  
+      await asyncForeach(petition, async (item) => {
+        const { idx } = item;
+  
+        const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+  
+        item.commentCount = comment.length;
+      });
+
+      petition.sort((a, b) => {
+        return  b["commentCount"] - a["commentCount"];
+      });
     }
     
 
