@@ -49,6 +49,16 @@ export const writeComment = async (req, res) => {
       id: memberId,
     });
 
+    let petitionVoteCount = petition.voteCount + 1;
+
+    await models.Petition.update({
+      voteCount: petitionVoteCount,
+    }, {
+      where: {
+        idx: petition.idx,
+      },
+    });
+
     const result = {
       status: 200,
       messaga: '동의 성공!',

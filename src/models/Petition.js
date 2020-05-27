@@ -37,6 +37,13 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
+    /** 동의 갯수 */
+    voteCount: {
+      field: 'vote_count',
+      type: DataTypes.INTEGER(50),
+      allowNull: false,
+      defaultValue: 0,
+    },
     /** 내용 */
     contents: {
       field: 'contents',
@@ -152,6 +159,17 @@ export default (sequelize, DataTypes) => {
   Petition.getAllIsAllowPetitionsForCount = () => Petition.findAll({
     order: [
       ['joinDate', 'DESC'],
+    ],
+
+    raw: true,
+  });
+
+  Petition.getAllPetitionForVoteOrder = (page, limit) => Petition.findAll({
+    offset: page,
+    limit: limit,
+
+    order: [
+      ['voteCount', 'DESC'],
     ],
 
     raw: true,
