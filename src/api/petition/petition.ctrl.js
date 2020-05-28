@@ -435,6 +435,18 @@ export const blindPetition = async (req, res) => {
 
 export const deletePetition = async (req, res) => {
   const { idx } = req.query;
+  const { accessLevel } = req.decoded;
+
+  if (accessLevel !== 0 && accessLevel !== 1) {
+    const result = {
+      status: 403,
+      messaga: '권한 없음!!',
+    };
+
+    res.status(403).json(result);
+
+    return;
+  }
 
   if (!idx) {
     const result = {
