@@ -79,6 +79,7 @@ export default (sequelize, DataTypes) => {
   Petition.getNotAllowedAllPetitions = () => Petition.findAll({
     where: {
       isAllowed: 0,
+      blind: 0,
     },
 
     order: [
@@ -95,11 +96,23 @@ export default (sequelize, DataTypes) => {
 
     where: {
       isAllowed: 0,
+      blind: 0,
     },
 
     order: [
       ['joinDate', 'DESC'],
     ],
+
+    raw: true,
+  });
+
+  // 청원 승인
+  Petition.updateAllowPetition = (idx) => Petition.update({
+    isAllowed: 1,
+  }, {
+    where: {
+      idx,
+    },
 
     raw: true,
   });
@@ -115,6 +128,7 @@ export default (sequelize, DataTypes) => {
 
     where: {
       isAllowed: 1,
+      blind: 0,
     },
 
     raw: true,
@@ -125,6 +139,10 @@ export default (sequelize, DataTypes) => {
     offset: requestPage,
     limit,
 
+    where: {
+      blind: 0,
+    },
+
     order: [
       ['joinDate', 'DESC'],
     ],
@@ -132,6 +150,7 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 페이지 별 청원 검색
   Petition.searchPetition = (title, page, limit) => Petition.findAll({
     offset: page,
     limit: limit,
@@ -139,16 +158,19 @@ export default (sequelize, DataTypes) => {
     where: {
       title: {
         [Op.like]: "%" + title + "%",
+        blind: 0,
       },
     },
 
     raw: true,
   });
 
+  // 전체 청원 검색
   Petition.searchAllPetition = (title) => Petition.findAll({
     where: {
       title: {
         [Op.like]: "%" + title + "%",
+        blind: 0,
       },
     },
 
@@ -157,6 +179,10 @@ export default (sequelize, DataTypes) => {
 
   // 전체 청원 목록 페이지 카운트 조회
   Petition.getAllIsAllowPetitionsForCount = () => Petition.findAll({
+    where: {
+      blind: 0,
+    },
+
     order: [
       ['joinDate', 'DESC'],
     ],
@@ -164,9 +190,14 @@ export default (sequelize, DataTypes) => {
     raw: true,
   });
 
+  // 투표 순 청원 조회
   Petition.getAllPetitionForVoteOrder = (page, limit) => Petition.findAll({
     offset: page,
     limit: limit,
+
+    where: {
+      blind: 0,
+    },
 
     order: [
       ['voteCount', 'DESC'],
@@ -183,6 +214,7 @@ export default (sequelize, DataTypes) => {
 
     where: {
       isAllowed: 1,
+      blind: 0,
     },
 
     raw: true,
@@ -201,6 +233,7 @@ export default (sequelize, DataTypes) => {
   Petition.getAllPetitionsByCategory = (category) => Petition.findAll({
     where: {
       category,
+      blind: 0,
     },
 
     order: [
@@ -217,11 +250,54 @@ export default (sequelize, DataTypes) => {
     
     where: {
       category,
+      blind: 0,
     },
 
     order: [
       ['joinDate', 'DESC'],
     ],
+
+    raw: true,
+  });
+
+  Petition.getBlindPetition = (requestPage, limit) => Petition.findAll({
+    offset: requestPage,
+    limit,
+
+    where: {
+      blind: 1,
+    },
+
+    raw: true,
+  });
+
+  Petition.getAllBlindPetition = () => Petition.findAll({
+    where: {
+      blind: 1,
+    },
+
+    raw: true,
+  });
+
+  Petition.getWaitingPetition = (requestPage, limit) => Petition.findAll({
+    offset: requestPage,
+    limit,
+
+    where: {
+      voteCount: {[Op.gte]: 10},
+      isAllowed: 0,
+      blind: 0,
+    },
+
+    raw: true,
+  });
+
+  Petition.getAllWaitingPetition = () => Petition.findAll({
+    where: {
+      voteCount: {[Op.gte]: 10},
+      isAllowed: 0,
+      blind: 0,
+    },
 
     raw: true,
   });

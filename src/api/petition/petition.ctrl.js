@@ -319,6 +319,116 @@ export const readPetitionDtail = async (req, res) => {
   }
 };
 
+export const getStudentCouncilPetition = async (req, res) => {
+  const { accessLevel } = req.decoded;
+  const { page, type } = req.query;
+  let { limit } = req.query;
+
+  if (!page || !limit || !type) {
+    const result = {
+      status: 400,
+      messaga: '요청 오류!',
+    };
+
+    res.status(400).json(result);
+
+    return;
+  }
+
+  try {
+    const requestPage = (page - 1) * limit;
+    limit = Number(limit);
+
+    let petition;
+    let petitionAll;
+    let totalPage;
+
+    if (type === 'blind') {
+      petition = await models.Petition.getBlindPetition(requestPage, limit);
+      petitionAll = await models.Petition.getAllBlindPetition();
+      totalPage = Math.ceil(petitionAll.length / limit);
+      
+    } else if (type === 'waiting') {
+      petition = await models.Petition.getWaitingPetition(requestPage, limit);
+      petitionAll = await models.Petition.getAllWaitingPetition();
+      totalPage = Math.ceil(petitionAll.length / limit);
+    }
+    
+
+    const result = {
+      status: 200,
+      messaga: '청원 게시글 조회 성공!',
+      data: {
+        petition,
+        totalPage,
+      },
+    };
+
+    res.status(200).json(result);
+
+  } catch (error) {
+    colorConsole.red(error);
+
+    const result = {
+      status: 500,
+      messaga: '서버 에러!',
+    };
+
+    res.status(500).json(result);
+  }
+};
+
+export const allowPetition = async (req, res) => {
+  const { accessLevel } = req.decoded;
+  const { idx } = req.body;
+
+  if (accessLevel !== 0 && accessLevel !== 1) {
+    const result = {
+      status: 403,
+      messaga: '권한 없음',
+    };
+
+    res.status(403).json(result);
+
+    return;
+  }
+
+
+  try {
+
+    const petition = await models.Petition.findPetition(idx);
+
+    if (petition.isAllowed === 1) {
+      const result = {
+        status: 405,
+        messaga: '이미 승인 처리 된 청원입니다.',
+      };
+  
+      res.status(405).json(result);
+      
+      return;
+    }
+
+    await models.Petition.updateAllowPetition(idx);
+
+    const result = {
+      status: 200,
+      messaga: '청원 게시글 승인 성공!',
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    colorConsole.red(error);
+
+    const result = {
+      status: 500,
+      messaga: '서버 에러!',
+    };
+
+    res.status(500).json(result);
+  }
+};
+
 export const readPetitionCategory = async (req, res) => {
   const { category, page } = req.query;
   let { limit } = req.query;

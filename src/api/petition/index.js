@@ -14,6 +14,8 @@ petition.post('/blind', authMiddleWare, petitionCtrl.blindPetition);
 petition.get('/category', petitionCtrl.readPetitionCategory);
 petition.delete('/', authMiddleWare, petitionCtrl.deletePetition);
 petition.get('/search', petitionCtrl.searchPetitionByTitle);
+petition.post('/allow', authMiddleWare, petitionCtrl.allowPetition);
+petition.get('/get_student_council', authMiddleWare, petitionCtrl.getStudentCouncilPetition);
 
 petition.use('/comment', comment);
 
