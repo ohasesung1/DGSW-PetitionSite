@@ -21,6 +21,9 @@ export const vaildateRegister = async (body) => {
     id: Joi.string().required(),
     pw: Joi.string().required(),
     name: Joi.string().required(),
+    grade: Joi.number().integer().required(),
+    studentClass: Joi.number().integer().required(),
+    number: Joi.number().integer().required()
   });
 
   try {
