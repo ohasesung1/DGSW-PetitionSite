@@ -90,7 +90,7 @@ export const registerMember = async (req, res) => {
 
     await models.Member.create({
       ...body,
-      accessLevel: 1,
+      accessLevel: 2,
     });
 
     const result = {
