@@ -158,7 +158,7 @@ export default (sequelize, DataTypes) => {
     where: {
       title: {
         [Op.like]: "%" + title + "%",
-        blind: 0,
+        // blind: 0,
       },
     },
 
@@ -170,7 +170,7 @@ export default (sequelize, DataTypes) => {
     where: {
       title: {
         [Op.like]: "%" + title + "%",
-        blind: 0,
+        // blind: 0,
       },
     },
 
