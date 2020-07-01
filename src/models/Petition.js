@@ -284,7 +284,7 @@ export default (sequelize, DataTypes) => {
     limit,
 
     where: {
-      voteCount: {[Op.gte]: 10},
+      voteCount: {[Op.gte]: 108},
       isAllowed: 0,
       blind: 0,
     },
