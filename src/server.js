@@ -36,7 +36,7 @@ try {
   };
 
   HTTPS.createServer(option, app).listen(sslport, () => {
-    colorConsole.green(`[HTTPS] Soda Server is started on port ${sslport}`);
+    colorConsole.green(`[HTTPS] DGSW-Petition Server is started on port ${sslport}`);
   });
 } catch (error) {
   colorConsole.red('[HTTPS] HTTPS 오류가 발생하였습니다. HTTPS 서버는 실행되지 않습니다.');
