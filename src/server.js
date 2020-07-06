@@ -6,10 +6,12 @@ import dotenv from 'dotenv';
 import cacheController from 'express-cache-controller';
 import api from './api';
 import HTTPS from 'https'
+import path from 'path';
 import fs from 'fs';
 
 dotenv.config();
 const port  = process.env.PORT;
+const { SSLPORT: sslport } = process.env;
 
 const app = express();
 const server = http.createServer(app);
