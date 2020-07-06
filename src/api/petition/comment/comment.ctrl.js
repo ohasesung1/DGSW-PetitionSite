@@ -49,11 +49,11 @@ export const writeComment = async (req, res) => {
       id: memberId,
     });
 
-    await models.Comment.destory({
-      where: {
-        idx,
-      },
-    });
+    // await models.Comment.destory({
+    //   where: {
+    //     idx,
+    //   },
+    // });
 
     let petitionVoteCount = petition.voteCount + 1;
 

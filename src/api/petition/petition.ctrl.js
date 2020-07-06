@@ -429,6 +429,7 @@ export const allowPetition = async (req, res) => {
   }
 };
 
+
 export const readPetitionCategory = async (req, res) => {
   const { category, page } = req.query;
   let { limit } = req.query;
@@ -518,7 +519,7 @@ export const blindPetition = async (req, res) => {
 
   try {
     await models.Petition.update({
-      blind: 1,
+      blind: body.isBlind,
     },{
       where: {
         idx: body.idx,
