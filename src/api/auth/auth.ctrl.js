@@ -102,6 +102,7 @@ export const registerMember = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
+    console.log(error);
     const result = {
       status: 500,
       message: '서버 에러!',
@@ -245,15 +246,17 @@ export const deleteAuth = async (req ,res) => {
 export const validateEmail = async (req, res) => {
   const { email } = req.body;
 
-  if (!isEmail(email)) {
-    const result = {
-      status: 400,
-      message: '이메일 형식을 지켜주세요.',
-    }
+  console.log(email);
 
-    res.status(400).json(result);
-    return;
-  }
+  // if (!isEmail(email)) {
+  //   const result = {
+  //     status: 400,
+  //     message: '이메일 형식을 지켜주세요.',
+  //   }
+
+  //   res.status(400).json(result);
+  //   return;
+  // }
     
   try {
 
@@ -261,11 +264,11 @@ export const validateEmail = async (req, res) => {
 
     if (emailData) {
       const result = {
-        status: 400,
+        status: 403,
         message: '이미 회원가입 처리된 이메일 입니다!',
       };
 
-      res.status(400).json(result);
+      res.status(403).json(result);
 
       return;
     }
