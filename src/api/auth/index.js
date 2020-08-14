@@ -8,5 +8,7 @@ auth.post('/register', authCtrl.registerMember);
 auth.post('/find/id', authCtrl.validateId);
 auth.post('/grant', authMiddleWare, authCtrl.grantAuth);
 auth.post('/delete_auth', authMiddleWare, authCtrl.deleteAuth);
+auth.post('/email', authCtrl.validateEmail);
+auth.post('/email/code', authCtrl.verifyEmailCode);
 
 export default auth;

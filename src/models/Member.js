@@ -22,19 +22,19 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    /** 회원 권한 등급 */
+    /** 학년 */
     grade: {
       field: 'grade',
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    /** 회원 권한 등급 */
+    /** 학반 */
     studentClass: {
       field: 'studentClass',
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    /** 회원 권한 등급 */
+    /** 번호 */
     number: {
       field: 'number',
       type: DataTypes.INTEGER,
@@ -43,6 +43,11 @@ export default (sequelize, DataTypes) => {
     name: {
       field: 'name',
       type: DataTypes.STRING(30),
+      allowNull: false,
+    },
+    certification: {
+      field: 'certification_check',
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
     joinDate: {
