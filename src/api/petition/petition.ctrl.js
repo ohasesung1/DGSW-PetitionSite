@@ -277,7 +277,7 @@ export const readAllPetitions = async (req, res) => {
   }
 };
 
-export const readPetitionDtail = async (req, res) => {
+export const readPetitionDetail = async (req, res) => {
   const { idx } = req.query;
 
   if (!idx) {
@@ -294,9 +294,12 @@ export const readPetitionDtail = async (req, res) => {
   try {
     const petition = await models.Petition.findPetition(idx);
     const comment = await models.Comment.getCommentsByPetitionIdx(idx);
+    const answer = await models.Answer.getAnswerByPetitionIdx(idx);
 
     petition.comment = [];
-    petition.comment = comment;
+    petition.answer = [];
+    petition.comment = comment; 
+    petition.answer = answer;
 
     const result = {
       status: 200,
