@@ -42,6 +42,19 @@ export const answerWrite = async (req, res) => {
       return
     }
 
+    if (petition.isAllowed === 1) {
+      const result = {
+        status: 405,
+        messaga: 'this petition has already been answered',
+      };
+  
+      res.status(405).json(result);
+      
+      return;
+    }
+
+    await models.Petition.updateAllowPetition(body.petitionIdx);
+
     await models.Answer.create({
       ...body,
       id: memberId,
