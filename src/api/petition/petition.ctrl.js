@@ -297,9 +297,8 @@ export const readPetitionDetail = async (req, res) => {
     const answer = await models.Answer.getAnswerByPetitionIdx(idx);
 
     petition.comment = [];
-    petition.answer = [];
-    petition.comment = comment; 
     petition.answer = answer;
+    petition.comment = comment; 
 
     const result = {
       status: 200,
