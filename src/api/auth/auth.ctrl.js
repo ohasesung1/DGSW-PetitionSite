@@ -34,7 +34,9 @@ export const login = async (req ,res) => {
     return;
   }
 
-  const tokenData = await token.createToken(member.id, member.accessLevel); 
+  const tokenData = await token.createToken(member.id, member.accessLevel);
+  
+  const refreshTokenData = await token.createRefreshToken(member.id, member.accessLevel);
 
   try {
     const result = {
@@ -42,6 +44,7 @@ export const login = async (req ,res) => {
       message: '로그인 성공!',
       data: {
         tokenData,
+        refreshTokenData,
         member,
       }
     }
